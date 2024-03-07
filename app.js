@@ -1,10 +1,19 @@
 const express = require('express');
+var bodyParser = require('body-parser');
 const app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+const productsRoutes = require('./routes/products');
+app.use(productsRoutes);
 
 //get post put delete
 
 //req.param   -- > https://localhost:8080/products:productId
-//req.body    
+//req.body    body-parser
 //req.query   --> https://localhost:8080/search?key=great
 
 app.use((req,res,next)=>{
@@ -12,39 +21,18 @@ app.use((req,res,next)=>{
     next();
 })
 
+
+
 app.get('/search',(req,res)=>{
     const {key} = req.query;
-    console.log(req.query);
-    res.send("ok");
+    console.log(key);
+    res.send(key);
 })
 
 
 app.get('/contact',(req,res)=>{
     res.send("here is contact");
 })
-
-const products = [
-    {id:1,name:"shirt"},
-    {id:2,name:"shoes"},
-    {id:3,name:"scarfs"}
-];
-
-app.get('/products/:productId',(req,res)=>{
-    const {productId} = req.params;
-    let product = products.find(item=>item.id === +productId);
-    console.log("the result product is : ", product);
-    res.send(product.name);
-    })
-
-app.get('/products',(req,res)=>{
-    // res.status(200).send("ok");
-    res.json({
-        status: 'ok',
-        statusCode: 200,
-        data: products,
-    })
-})
-
 
 
 app.get('/',(req,res)=>{
